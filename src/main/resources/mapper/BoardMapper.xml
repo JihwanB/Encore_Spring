@@ -4,33 +4,41 @@
 <mapper namespace="com.example.encore_spring_pjt.mapper.BoardMapper">
 
     <sql id="insertColumns">
-        title       ,
-        content     ,
-        writer      ,
-        view_cnt    ,
-        notice_yn   ,
-        secret_yn   ,
-        delete_yn   ,
-        insert_time ,
-        update_time
+        TITLE       ,
+        CONTENT     ,
+        WRITER      ,
+        VIEW_CNT    ,
+        NOTICE_YN   ,
+        SECRET_YN   ,
+        DELETE_YN   ,
+        INSERT_TIME ,
+        UPDATE_TIME
     </sql>
     <sql id="selectColumns">
-        idx,
-        title       ,
-        content     ,
-        writer      ,
-        view_cnt    ,
-        notice_yn   ,
-        secret_yn   ,
-        delete_yn   ,
-        insert_time ,
-        update_time
+        IDX         ,
+        TITLE       ,
+        CONTENT     ,
+        WRITER      ,
+        VIEW_CNT    ,
+        NOTICE_YN   ,
+        SECRET_YN   ,
+        DELETE_YN   ,
+        INSERT_TIME ,
+        UPDATE_TIME
     </sql>
 
     <insert id="save"
             parameterType="com.example.encore_spring_pjt.domain.BoardRequest">
-        insert into encore_board_tbl(<include refid="insertColumns"/>)
-        values(
+        INSERT INTO ENCORE_BOARD_TBL(TITLE       ,
+                                     CONTENT     ,
+                                     WRITER      ,
+                                     VIEW_CNT    ,
+                                     NOTICE_YN   ,
+                                     SECRET_YN   ,
+                                     DELETE_YN   ,
+                                     INSERT_TIME ,
+                                     UPDATE_TIME)
+        VALUES (
                #{title},
                #{content},
                #{writer},
@@ -38,16 +46,49 @@
                #{noticeYn},
                #{secretYn},
                false,
-               Now(),
+               NOW(),
                NULL)
     </insert>
 
     <select id="findByIdx"
             parameterType="com.example.encore_spring_pjt.domain.BoardRequest"
             resultType="com.example.encore_spring_pjt.domain.BoardResponse">
-        select <include refid="selectColumns"/>
-        from encore_board_tbl
-        where idx = #{idx}
+        SELECT <include refid="selectColumns"/>
+        FROM ENCORE_BOARD_TBL
+        WHERE IDX = #{idx}
+    </select>
+
+    <update id="updateByIdx"
+            parameterType="com.example.encore_spring_pjt.domain.BoardRequest">
+        UPDATE ENCORE_BOARD_TBL
+        SET
+            UPDATE_TIME = NOW(),
+            TITLE = #{title},
+            CONTENT = #{content},
+            WRITER = #{writer}
+        WHERE IDX = #{idx}
+    </update>
+
+    <select id="count"
+            resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM ENCORE_BOARD_TBL
+        WHERE DELETE_YN = 0
+    </select>
+    
+    <delete id="deleteByIdx"
+            parameterType="com.example.encore_spring_pjt.domain.BoardRequest">
+        UPDATE ENCORE_BOARD_TBL
+        SET
+            DELETE_YN = 1,
+            DELETE_TIME = NOW()
+        WHERE IDX = #{idx}
+    </delete>
+    
+    <select id="findAll"
+            resultType="com.example.encore_spring_pjt.domain.BoardResponse">
+        SELECT <include refid="selectColumns"/>
+        FROM ENCORE_BOARD_TBL
     </select>
 
 </mapper>
