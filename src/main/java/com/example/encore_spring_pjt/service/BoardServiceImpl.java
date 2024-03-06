@@ -25,12 +25,14 @@ public class BoardServiceImpl implements BoardService {
     public Integer saveBoard(BoardRequest params) {
         System.out.println("debug >>>> BoardService saveBoard : " + boardMapper);
         boardMapper.save(params);
+
         return params.getIdx();
     }
 
     @Override
     public BoardResponse findBoard(BoardRequest params) {
         System.out.println("debug >>>> BoardService findBoard ");
+
         return boardMapper.findByIdx(params);
     }
 
@@ -39,6 +41,7 @@ public class BoardServiceImpl implements BoardService {
     public Integer updateBoard(BoardRequest params) {
         System.out.println("debug >>>> BoardService updateBoard ");
         boardMapper.updateByIdx(params);
+
         return params.getIdx();
     }
 
@@ -46,8 +49,8 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Integer deleteBoard(BoardRequest params) {
         System.out.println("debug >>>> BoardService deleteBoard ");
-
         boardMapper.deleteByIdx(params);
+
         return params.getIdx();
     }
 
@@ -56,6 +59,13 @@ public class BoardServiceImpl implements BoardService {
         System.out.println("debug >>>> BoardService listBoard ");
 
         return boardMapper.findAll();
+    }
+
+    @Override
+    public Integer cntBoard() {
+        System.out.println("debug >>>> BoardService cntBoard ");
+
+        return boardMapper.count();
     }
 
 }

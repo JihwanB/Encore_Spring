@@ -41,4 +41,9 @@ public class PostServiceImpl implements BoardService{
         return null;
     }
 
+    @Override
+    public Integer cntBoard() {
+        return null;
+    }
+
 }

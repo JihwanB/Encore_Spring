@@ -96,6 +96,7 @@
             resultType="com.example.encore_spring_pjt.domain.BoardResponse">
         SELECT <include refid="selectColumns"/>
         FROM ENCORE_BOARD_TBL
+        WHERE DELETE_YN = 0
     </select>
 
 </mapper>

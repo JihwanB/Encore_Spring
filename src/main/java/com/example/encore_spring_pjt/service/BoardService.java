@@ -16,4 +16,6 @@ public interface BoardService {
 
     List<BoardResponse> listBoard();
 
+    Integer cntBoard();
+
 }
