@@ -28,26 +28,29 @@
     </sql>
 
     <insert id="save"
-            parameterType="com.example.encore_spring_pjt.domain.BoardRequest">
-        INSERT INTO ENCORE_BOARD_TBL(TITLE       ,
-                                     CONTENT     ,
-                                     WRITER      ,
-                                     VIEW_CNT    ,
-                                     NOTICE_YN   ,
-                                     SECRET_YN   ,
-                                     DELETE_YN   ,
-                                     INSERT_TIME ,
+            parameterType="com.example.encore_spring_pjt.domain.BoardRequest"
+            useGeneratedKeys="true"
+            keyProperty="idx">
+        INSERT INTO ENCORE_BOARD_TBL(IDX,
+                                     TITLE,
+                                     CONTENT,
+                                     WRITER,
+                                     VIEW_CNT,
+                                     NOTICE_YN,
+                                     SECRET_YN,
+                                     DELETE_YN,
+                                     INSERT_TIME,
                                      UPDATE_TIME)
-        VALUES (
-               #{title},
-               #{content},
-               #{writer},
-               0,
-               #{noticeYn},
-               #{secretYn},
-               false,
-               NOW(),
-               NULL)
+        VALUES (#{idx},
+                #{title},
+                #{content},
+                #{writer},
+                0,
+                #{noticeYn},
+                #{secretYn},
+                false,
+                NOW(),
+                NULL)
     </insert>
 
     <select id="findByIdx"
@@ -59,7 +62,9 @@
     </select>
 
     <update id="updateByIdx"
-            parameterType="com.example.encore_spring_pjt.domain.BoardRequest">
+            parameterType="com.example.encore_spring_pjt.domain.BoardRequest"
+            useGeneratedKeys="true"
+            keyProperty="idx">
         UPDATE ENCORE_BOARD_TBL
         SET
             UPDATE_TIME = NOW(),
@@ -76,14 +81,16 @@
         WHERE DELETE_YN = 0
     </select>
     
-    <delete id="deleteByIdx"
-            parameterType="com.example.encore_spring_pjt.domain.BoardRequest">
+    <update id="deleteByIdx"
+            parameterType="com.example.encore_spring_pjt.domain.BoardRequest"
+            useGeneratedKeys="true"
+            keyProperty="idx">
         UPDATE ENCORE_BOARD_TBL
         SET
             DELETE_YN = 1,
             DELETE_TIME = NOW()
         WHERE IDX = #{idx}
-    </delete>
+    </update>
     
     <select id="findAll"
             resultType="com.example.encore_spring_pjt.domain.BoardResponse">
