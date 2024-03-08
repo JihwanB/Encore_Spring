@@ -17,7 +17,7 @@ public class PostServiceImpl implements BoardService{
 
     @Override
     public Integer saveBoard(BoardRequest params) {
-        System.out.println("debug >>>> postService SaveBoard : " + boardMapper);
+        System.out.println("debug >>>> PostService saveBoard : " + boardMapper);
         return null;
     }
 

@@ -24,7 +24,8 @@
         SECRET_YN   ,
         DELETE_YN   ,
         INSERT_TIME ,
-        UPDATE_TIME
+        UPDATE_TIME ,
+        DELETE_TIME
     </sql>
 
     <insert id="save"

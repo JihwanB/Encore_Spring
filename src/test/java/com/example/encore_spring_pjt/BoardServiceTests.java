@@ -52,7 +52,7 @@ public class BoardServiceTests {
                 .build();
 
         BoardResponse response = service.findBoard(request);
-        System.out.println("\"findBoard result\"\n" + response);
+        System.out.println("findBoard result : " + response);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class BoardServiceTests {
                 .build();
 
         Integer idx = service.updateBoard(request);
-        System.out.println("\"updateBoard result\"\n" + idx + "번 레코드를 수정하였습니다.");
+        System.out.println("updateBoard result : " + idx + "번 레코드를 수정하였습니다.");
     }
 
     @Test
@@ -79,7 +79,7 @@ public class BoardServiceTests {
                 .build();
 
         Integer idx = service.deleteBoard(request);
-        System.out.println("\"deleteBoard result\"\n" + idx + "번 레코드가 삭제되었습니다.");
+        System.out.println("deleteBoard result : " + idx + "번 레코드가 삭제되었습니다.");
     }
 
     @Test
@@ -88,7 +88,7 @@ public class BoardServiceTests {
 
         List<BoardResponse> responses = service.listBoard();
 
-        System.out.println("\"listBoard result\"");
+        System.out.println(">>> listBoard result <<<");
         for (BoardResponse response : responses) {
             System.out.println(response);
         }
@@ -100,7 +100,6 @@ public class BoardServiceTests {
 
         Integer cnt = service.cntBoard();
 
-        System.out.println("\"cntBoard result\"");
-        System.out.println(cnt + "건의 삭제되지 않은 레코드가 있습니다.");
+        System.out.println("cntBoard result" + cnt + "건의 삭제되지 않은 레코드가 있습니다.");
     }
 }
