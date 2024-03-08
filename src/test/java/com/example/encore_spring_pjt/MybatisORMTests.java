@@ -22,13 +22,12 @@ public class MybatisORMTests {
     public void ormSave() {
         System.out.println("debug mapper >>>>>>>>>>>>>>>>>>>>>> " + boardMapper);
 
-        BoardRequest request = BoardRequest.builder()
-                .title("orm 수업")
-                .content("mybatis mapping")
-                .writer("encore")
-                .noticeYn(true)
-                .secretYn(true)
-                .build();
+        BoardRequest request = new BoardRequest();
+        request.setTitle("orm 수업");
+        request.setContent("mybatis mapping");
+        request.setWriter("encore");
+        request.setNoticeYn(true);
+        request.setSecretYn(true);
 
         boardMapper.save(request);
         System.out.println("debug >>>>>> save success ");
@@ -38,9 +37,8 @@ public class MybatisORMTests {
     public void ormFind() throws JsonProcessingException {
         System.out.println("debug finder >>>>>>>>>>>>>>>>>>>>>> ");
 
-        BoardRequest request = BoardRequest.builder()
-                .idx(1)
-                .build();
+        BoardRequest request = new BoardRequest();
+        request.setIdx(1);
 
         BoardResponse response = boardMapper.findByIdx(request);
         System.out.println("debug find result >>>>> ");
@@ -55,12 +53,11 @@ public class MybatisORMTests {
     public void ormUpdate() {
         System.out.println("debug update >>>>>>>>>>>>>>> ");
 
-        BoardRequest request = BoardRequest.builder()
-                .idx(1)
-                .title("제목 수정")
-                .content("변경된 내용")
-                .writer("jslim")
-                .build();
+        BoardRequest request = new BoardRequest();
+        request.setIdx(1);
+        request.setTitle("제목 수정");
+        request.setContent("변경된 내용");
+        request.setWriter("jslim");
 
         boardMapper.updateByIdx(request);
 
@@ -81,9 +78,8 @@ public class MybatisORMTests {
     public void ormDelete() {
         System.out.println("debug delete >>>>>>>>>>>>>> ");
 
-        BoardRequest request = BoardRequest.builder()
-                .idx(2)
-                .build();
+        BoardRequest request = new BoardRequest();
+        request.setIdx(2);
 
         boardMapper.deleteByIdx(request);
 

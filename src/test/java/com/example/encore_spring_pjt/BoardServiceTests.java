@@ -31,13 +31,12 @@ public class BoardServiceTests {
         request.setSecretYn(true);
          */
 
-        BoardRequest request = BoardRequest.builder()
-                .title("service")
-                .content("mapper")
-                .writer("encore")
-                .noticeYn(true)
-                .secretYn(true)
-                .build();
+        BoardRequest request = new BoardRequest();
+        request.setTitle("service");
+        request.setContent("mapper");
+        request.setWriter("encore");
+        request.setNoticeYn(true);
+        request.setSecretYn(true);
 
         Integer idx = service.saveBoard(request);
         System.out.println("입력한 데이터의 키 값을 출력 : " + idx);
@@ -47,9 +46,8 @@ public class BoardServiceTests {
     public void serviceFindTest() {
         System.out.println("debug Test -> serviceFindTest() ");
 
-        BoardRequest request = BoardRequest.builder()
-                .idx(1)
-                .build();
+        BoardRequest request = new BoardRequest();
+        request.setIdx(1);
 
         BoardResponse response = service.findBoard(request);
         System.out.println("findBoard result : " + response);
@@ -59,12 +57,11 @@ public class BoardServiceTests {
     public void serviceUpdateTest() {
         System.out.println("debug Test -> serviceUpdateTest() ");
 
-        BoardRequest request = BoardRequest.builder()
-                .idx(1)
-                .title("Title")
-                .content("Content")
-                .writer("Writer")
-                .build();
+        BoardRequest request = new BoardRequest();
+        request.setIdx(1);
+        request.setTitle("Title");
+        request.setContent("Content");
+        request.setWriter("Writer");
 
         Integer idx = service.updateBoard(request);
         System.out.println("updateBoard result : " + idx + "번 레코드를 수정하였습니다.");
@@ -74,9 +71,8 @@ public class BoardServiceTests {
     public void serviceDeleteTest() {
         System.out.println("debug Test -> serviceDeleteTest() ");
 
-        BoardRequest request = BoardRequest.builder()
-                .idx(4)
-                .build();
+        BoardRequest request = new BoardRequest();
+        request.setIdx(4);
 
         Integer idx = service.deleteBoard(request);
         System.out.println("deleteBoard result : " + idx + "번 레코드가 삭제되었습니다.");

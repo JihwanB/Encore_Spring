@@ -30,4 +30,7 @@ public interface BoardMapper {
     // select (multi finder)
     List<BoardResponse> findAll();
 
+    // 조회수를 증가시키는 메서드 추가
+    void updateViewCnt(BoardRequest params);
+
 }

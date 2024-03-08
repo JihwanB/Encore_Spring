@@ -6,6 +6,8 @@ import com.example.encore_spring_pjt.service.BoardServiceImpl;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -18,7 +20,7 @@ public class BoardController {
     private BoardServiceImpl service;
 
     @RequestMapping("/list.hanwha") // http:// serverIP:port/board/list.hanwha
-    public String list() {
+    public String list(Model model) {
         System.out.println("debug BoardController client path /board/list.hanwha");
 
         /*
@@ -32,6 +34,8 @@ public class BoardController {
         for (BoardResponse response : list) {
             System.out.println(response);
         }
+
+        model.addAttribute("lst", list);
 
         return "list";
     }
@@ -54,10 +58,50 @@ public class BoardController {
         return "view";
     }
 
-    @RequestMapping("/write.hanwha")
-    public String writeForm() {
-        System.out.println("debug BoardController client path /board/write.hanwha");
-
+    @GetMapping("/write.hanwha")
+    public String writeForm(BoardRequest params, Model model) {
+        System.out.println("debug BoardController client path GET /board/write.hanwha");
+        System.out.println("debug >>>>> " + params);
+        if (params.getIdx() != null) {
+            System.out.println("debug >>>> update");
+            BoardResponse response = service.findBoard(params);
+            model.addAttribute("response", response);
+        }
         return "write";
     }
+
+    @PostMapping("/write.hanwha")
+    public String write(BoardRequest params) {
+        System.out.println("debug BoardController client path POST /board/write.hanwha");
+        System.out.println("debug >>> params value " + params);
+        /*
+         params 로 넘겨받은 데이터를 service 에게 전달하여 Mapper (save)
+         입력된 데이터의 기본키 값을 반환 받고 출력
+         */
+        Integer idx = service.saveBoard(params);
+
+        System.out.println("debug result => " + idx + "번 게시글 입력");
+        return "redirect:/board/list.hanwha";
+    }
+
+    @GetMapping("/delete.hanwha")
+    public String delete(BoardRequest params) {
+        System.out.println("debug BoardController client path GET /board/delete.hanwha");
+        System.out.println("debug >>> params value " + params);
+
+        Integer idx = service.deleteBoard(params);
+        System.out.println("debug result => " + idx + "번 게시글 삭제");
+        return "redirect:/board/list.hanwha";
+    }
+
+    @PostMapping("/update.hanwha")
+    public String update(BoardRequest params) {
+        System.out.println("debug BoardController client path POST /board/update.hanwha");
+        System.out.println("debug >>> params value " + params);
+
+        Integer idx = service.updateBoard(params);
+        System.out.println("debug result => " + idx + "번 게시글 수정완료");
+        return "redirect:/board/list.hanwha";
+    }
+
 }
