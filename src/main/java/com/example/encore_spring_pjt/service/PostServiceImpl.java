@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service("post")
 @RequiredArgsConstructor
@@ -22,8 +23,8 @@ public class PostServiceImpl implements BoardService{
     }
 
     @Override
-    public BoardResponse findBoard(BoardRequest params) {
-        return null;
+    public Optional<BoardResponse> findBoard(BoardRequest params) {
+        return Optional.empty();
     }
 
     @Override

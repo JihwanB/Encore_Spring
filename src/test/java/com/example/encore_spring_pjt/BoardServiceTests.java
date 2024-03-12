@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Optional;
 
 // DI - Autowired, Resource
 @SpringBootTest
@@ -31,12 +32,13 @@ public class BoardServiceTests {
         request.setSecretYn(true);
          */
 
-        BoardRequest request = new BoardRequest();
-        request.setTitle("service");
-        request.setContent("mapper");
-        request.setWriter("encore");
-        request.setNoticeYn(true);
-        request.setSecretYn(true);
+        BoardRequest request = BoardRequest.builder()
+                .title("service")
+                .content("mapper")
+                .writer("encore")
+                .noticeYn(true)
+                .secretYn(true)
+                .build();
 
         Integer idx = service.saveBoard(request);
         System.out.println("입력한 데이터의 키 값을 출력 : " + idx);
@@ -46,10 +48,11 @@ public class BoardServiceTests {
     public void serviceFindTest() {
         System.out.println("debug Test -> serviceFindTest() ");
 
-        BoardRequest request = new BoardRequest();
-        request.setIdx(1);
+        BoardRequest request = BoardRequest.builder()
+                .idx(1)
+                .build();
 
-        BoardResponse response = service.findBoard(request);
+        Optional<BoardResponse> response = service.findBoard(request);
         System.out.println("findBoard result : " + response);
     }
 
@@ -57,11 +60,12 @@ public class BoardServiceTests {
     public void serviceUpdateTest() {
         System.out.println("debug Test -> serviceUpdateTest() ");
 
-        BoardRequest request = new BoardRequest();
-        request.setIdx(1);
-        request.setTitle("Title");
-        request.setContent("Content");
-        request.setWriter("Writer");
+        BoardRequest request = BoardRequest.builder()
+                .idx(1)
+                .title("Title")
+                .content("Content")
+                .writer("Writer")
+                .build();
 
         Integer idx = service.updateBoard(request);
         System.out.println("updateBoard result : " + idx + "번 레코드를 수정하였습니다.");
@@ -71,8 +75,9 @@ public class BoardServiceTests {
     public void serviceDeleteTest() {
         System.out.println("debug Test -> serviceDeleteTest() ");
 
-        BoardRequest request = new BoardRequest();
-        request.setIdx(4);
+        BoardRequest request = BoardRequest.builder()
+                .idx(4)
+                .build();
 
         Integer idx = service.deleteBoard(request);
         System.out.println("deleteBoard result : " + idx + "번 레코드가 삭제되었습니다.");

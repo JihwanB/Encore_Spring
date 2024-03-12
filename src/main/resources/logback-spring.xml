@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ log 란?
+ - 특정한 이벤트를 기록하는 것
+ - 소프트웨어가 동작하면서 발생되는 문제점을 찾아내고, 해결하기 위한 디자인
+ - 모니터링하기 위함
+ - slf4j : Simple Logging Facade for Java
+    - 추상화된 인터페이스
+    - 구현체를 갖고있지 않음
+ - log4j : 구현되어 있는 구현체
+    - e.g., logback 도 그 중 하나
+    - appender : 어디에 출력할 지 결정(console, file, DB 저장)
+    - logger : 로그를 출력할 요소 (level 속성을 통해서 출력)
+        - level : fatal, error, warn, info, debug(개발시)
+-->
+
+<configuration debug="true">
+
+    <!-- Appenders -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>%d %5p [%c] %m%n</Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="console-infolog" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>%d %5p %m%n</Pattern>
+        </encoder>
+    </appender>
+
+    <!-- Logger -->
+    <logger name="com.example.encore_spring_pjt" level="DEBUG" appender-ref="console"/>
+    <logger name="jdbc.sqlonly" level="INFO" appender-ref="console-infolog"/>
+    <logger name="jdbc.sqltiming" level="DEBUG" appender-ref="console"/>
+    <logger name="jdbc.resultsettable" level="INFO" appender-ref="console-infolog"/>
+
+    <!-- Root Logger -->
+    <root level="off">
+        <appender-ref ref="console"/>
+    </root>
+</configuration>
