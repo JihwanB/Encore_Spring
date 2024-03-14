@@ -13,7 +13,7 @@
 		  <link href="resources/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
 		  <!-- iCheck -->
 		  <link href="resources/plugins/iCheck/square/blue.css" rel="stylesheet" type="text/css" />
-	  
+
 		</head>
 		<body class="login-page">
 		  <div class="login-box">
@@ -22,7 +22,7 @@
 			</div><!-- /.login-logo -->
 			<div class="login-box-body">
 			  <p class="login-box-msg">Sign in to start your session</p>
-	  
+
 	  <form action="./user/login.hanwha" method="post">
 		<div class="form-group has-feedback">
 		  <input type="text" name="id" class="form-control" placeholder="USER ID"/>
@@ -31,14 +31,15 @@
 		<div class="form-group has-feedback">
 		  <input type="password" name="pwd" class="form-control" placeholder="Password"/>
 		  <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+			<font color="red">${failMsg}</font>
 		</div>
 		<div class="row">
-		  <div class="col-xs-8">    
+		  <div class="col-xs-8">
 			<div class="checkbox icheck">
 			  <label>
 				<input type="checkbox" name="useCookie"> Remember Me
 			  </label>
-			</div>                        
+			</div>
 		  </div><!-- /.col -->
 		  <div class="col-xs-4">
 			<button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
@@ -48,15 +49,15 @@
 	  		<!-- 카카오 로그인 -->
 			<a class="p-2" href="">
 				카카오 oauth
-			</a><br/>	
-			
-	
+			</a><br/>
+
+
 			<a href="#">I forgot my password</a><br>
 	  		<a href="#" class="text-center">Register a new membership</a>
-	  
+
 			</div><!-- /.login-box-body -->
 		  </div><!-- /.login-box -->
-	  
+
 		  <!-- jQuery 2.1.4 -->
 		  <script src="resources/plugins/jQuery/jQuery-2.1.4.min.js"></script>
 		  <!-- Bootstrap 3.3.2 JS -->

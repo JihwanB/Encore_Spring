@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.encore_spring_pjt.ctrl.user.mapper.UserMapper">
+
+    <select id="loginRow"
+            parameterType="com.example.encore_spring_pjt.ctrl.user.domain.UserRequest"
+            resultType="com.example.encore_spring_pjt.ctrl.user.domain.UserResponse">
+        SELECT ID, PWD, NAME, POINT
+        FROM ENCORE_USER_MEMBER_TBL
+        WHERE ID = #{id} AND PWD = #{pwd}
+    </select>
+
+</mapper>

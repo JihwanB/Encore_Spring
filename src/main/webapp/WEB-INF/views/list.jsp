@@ -19,6 +19,10 @@
         <div class="pull-left">
             <h1 class="page-title">Hanwha SW Camp 5th</h1>
         </div>
+        <div class="pull-right">
+            <h1 class="page-title">${loginUser.name}님 로그인</h1>
+            <button class="btn btn-warning btn-sm"><a href="/user/logout.hanwha">로그아웃</a></button>
+        </div>
     </div>
     
 	<div id="wrapper">
