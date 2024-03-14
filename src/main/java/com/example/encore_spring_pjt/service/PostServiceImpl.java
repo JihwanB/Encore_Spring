@@ -1,8 +1,8 @@
 package com.example.encore_spring_pjt.service;
 
+import com.example.encore_spring_pjt.ctrl.rest.dao.PostRepository;
+import com.example.encore_spring_pjt.domain.BoardEntity;
 import com.example.encore_spring_pjt.domain.BoardRequest;
-import com.example.encore_spring_pjt.domain.BoardResponse;
-import com.example.encore_spring_pjt.mapper.BoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,40 +11,36 @@ import java.util.Optional;
 
 @Service("post")
 @RequiredArgsConstructor
-public class PostServiceImpl implements BoardService{
+public class PostServiceImpl {
+    private final PostRepository postRepository;
 
-    // @Autowired
-    private final BoardMapper boardMapper;
-
-    @Override
-    public Integer saveBoard(BoardRequest params) {
-        System.out.println("debug >>>> PostService saveBoard : " + boardMapper);
-        return null;
+    public Integer saveBoard(BoardEntity params) {
+        System.out.println("debug >>>> PostService saveBoard : ");
+        BoardEntity entity = postRepository.save(params);
+        return entity.getIdx();
     }
 
-    @Override
-    public Optional<BoardResponse> findBoard(BoardRequest params) {
-        return Optional.empty();
+    public Optional<BoardEntity> findBoard(BoardEntity params) {
+        System.out.println("debug >>>> PostService findBoard : ");
+        return postRepository.findById(params.getIdx());
     }
 
-    @Override
     public Integer updateBoard(BoardRequest params) {
         return null;
     }
 
-    @Override
     public Integer deleteBoard(BoardRequest params) {
         return null;
     }
 
-    @Override
-    public List<BoardResponse> listBoard() {
-        return null;
+    public List<BoardEntity> listBoard() {
+        System.out.println("debug >>> postService listBoard >>>>> " + postRepository);
+        return postRepository.findAll();
     }
 
-    @Override
     public Integer cntBoard() {
-        return null;
+        System.out.println("debug >>>> PostService cntBoard : ");
+        return Math.toIntExact(postRepository.count());
     }
 
 }
