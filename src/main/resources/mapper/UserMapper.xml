@@ -1,14 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
 <mapper namespace="com.example.encore_spring_pjt.ctrl.user.mapper.UserMapper">
-
     <select id="loginRow"
             parameterType="com.example.encore_spring_pjt.ctrl.user.domain.UserRequest"
             resultType="com.example.encore_spring_pjt.ctrl.user.domain.UserResponse">
-        SELECT ID, PWD, NAME, POINT
+        SELECT id, pwd, name, point
         FROM ENCORE_USER_MEMBER_TBL
-        WHERE ID = #{id} AND PWD = #{pwd}
+        WHERE id = #{id} AND pwd = #{pwd}
     </select>
 
+    <select id="getPwd"
+            parameterType="com.example.encore_spring_pjt.ctrl.user.domain.UserRequest"
+            resultType="String">
+        SELECT pwd
+        FROM ENCORE_USER_MEMBER_TBL
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insertRow"
+            parameterType="com.example.encore_spring_pjt.ctrl.user.domain.UserRequest">
+        INSERT INTO ENCORE_USER_MEMBER_TBL
+        VALUES (#{id}, #{pwd}, #{name}, 0)
+    </insert>
 </mapper>

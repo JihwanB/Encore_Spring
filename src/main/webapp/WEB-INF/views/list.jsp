@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 
 <!DOCTYPE html>
@@ -20,8 +20,8 @@
             <h1 class="page-title">Hanwha SW Camp 5th</h1>
         </div>
         <div class="pull-right">
-            <h1 class="page-title">${loginUser.name}님 로그인</h1>
-            <button class="btn btn-warning btn-sm"><a href="/user/logout.hanwha">로그아웃</a></button>
+            <h1 class="page-title">${ loginUser.name }님이 로그인 하였습니다</h1>
+            <button class="btn btn-warning"><a href="/user/logout.hanwha">로그아웃</a></button>
         </div>
     </div>
     
@@ -51,17 +51,15 @@
                     </tr>
                 </thead>
                 <tbody>
-
-                    <c:forEach items="${lst}" var="row" varStatus="status">
+                    <c:forEach var ="item" items="${lst}" varStatus="status">
                         <tr>
                             <td>${status.count}</td>
-                            <td class="text-left"><a href="./view.hanwha?idx=${row.idx}">${row.title}</a></td>
-                            <td>${row.writer}</td>
-                            <td>${row.insertTime}</td>
-                            <td>${row.viewCnt}</td>
+                            <td class="text-left"><a href="view.hanwha?idx=${item.idx}">${item.title}</a></td>
+                            <td>${item.writer}</td>
+                            <td>${item.insertTime}</td>
+                            <td>${item.viewCnt}</td>
                         </tr>
                     </c:forEach>
-
                 </tbody>
             </table>
 

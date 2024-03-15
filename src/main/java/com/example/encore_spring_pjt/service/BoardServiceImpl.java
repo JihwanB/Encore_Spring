@@ -70,4 +70,13 @@ public class BoardServiceImpl implements BoardService {
         return boardMapper.count();
     }
 
+    @Transactional
+    @Override
+    public Optional<BoardResponse> findBoardNoIncrement(BoardRequest params) {
+        System.out.println("debug >>>> BoardService findBoardNotCnt ");
+        return Optional.ofNullable(boardMapper.findByIdx(params));
+    }
+
 }
+
+

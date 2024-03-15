@@ -19,4 +19,5 @@ public interface BoardService {
 
     Integer cntBoard();
 
+    Optional<BoardResponse> findBoardNoIncrement(BoardRequest params);
 }
