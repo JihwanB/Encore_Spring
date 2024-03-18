@@ -13,9 +13,12 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
-        httpSecurity.csrf().disable();
-        httpSecurity.headers().frameOptions().disable();
-        httpSecurity.formLogin().disable();
+//        httpSecurity.csrf(AbstractHttpConfigurer::disable);
+         httpSecurity.csrf().disable();
+//        httpSecurity.headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
+         httpSecurity.headers().frameOptions().disable();
+//        httpSecurity.formLogin(AbstractHttpConfigurer::disable);
+         httpSecurity.formLogin().disable();
         return httpSecurity.build();
     }
 
