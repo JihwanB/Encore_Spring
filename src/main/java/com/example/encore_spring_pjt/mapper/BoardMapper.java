@@ -1,5 +1,6 @@
 package com.example.encore_spring_pjt.mapper;
 
+import com.example.encore_spring_pjt.ctrl.board.util.PageDTO;
 import com.example.encore_spring_pjt.domain.BoardRequest;
 import com.example.encore_spring_pjt.domain.BoardResponse;
 import org.apache.ibatis.annotations.Mapper;
@@ -22,13 +23,16 @@ public interface BoardMapper {
     void updateByIdx(BoardRequest params);
 
     // 레코드의 건수를 count
-    int count();
+    // int count();
+    int count(PageDTO params);
 
     // delete (idx)
     void deleteByIdx(BoardRequest params);
 
     // select (multi finder)
-    List<BoardResponse> findAll();
+    // List<BoardResponse> findAll();
+    // 페이지 처리를 위한 수정
+    List<BoardResponse> findAll(PageDTO params);
 
     // 조회수를 증가시키는 메서드 추가
     void updateViewCnt(BoardRequest params);

@@ -1,5 +1,6 @@
 package com.example.encore_spring_pjt.ctrl.board;
 
+import com.example.encore_spring_pjt.ctrl.board.util.PageDTO;
 import com.example.encore_spring_pjt.domain.BoardRequest;
 import com.example.encore_spring_pjt.domain.BoardResponse;
 import com.example.encore_spring_pjt.service.BoardService;
@@ -38,21 +39,18 @@ public class BoardController {
 //        return lst;
 //    }
 
-    @RequestMapping("/list.hanwha")
-    public String list(Model model) {
-        System.out.println("debug BoardController client path /board/list.hanwha");
-
+    @RequestMapping("/list.hanwha") // http:// serverip : port / board / list.hanwha
+    public String list(PageDTO params, Model model) {
         //BoardServiceImpl listBoard() 메서드 호출하여 결과를 반환 받고
         //반환받은 결과를 Model(requestScope) 에 심고 이 데이터를
         //forward 되는 페이지에서 출력
-        List<BoardResponse> lst = service.listBoard();
-        //System.out.println(lst);
+        List<BoardResponse> lst = service.listBoard(params);
         model.addAttribute("lst", lst);
         return "list";
     }
 
-    //    @GetMapping("/view.hanwha/{idx}")
-//    public void view(@PathVariable("idx") Integer idx){
+    // @GetMapping("/view.hanwha/{idx}")
+    // public void view(@PathVariable("idx") Integer idx){
     // 조회수 중복방지 구현으로 커스터마이징
     // 쿠키를 이용한 WEB : request.getSession(), request.getCookie()
     // setMaxAge(60 * 60 * 24 * 30) 초단위. 60초 * 60분 * 24시간 * 30일 = 1달

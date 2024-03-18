@@ -1,5 +1,6 @@
 package com.example.encore_spring_pjt;
 
+import com.example.encore_spring_pjt.ctrl.board.util.PageDTO;
 import com.example.encore_spring_pjt.domain.BoardRequest;
 import com.example.encore_spring_pjt.domain.BoardResponse;
 import com.example.encore_spring_pjt.mapper.BoardMapper;
@@ -69,10 +70,10 @@ public class MybatisORMTests {
     }
 
     @Test
-    public void ormCount() {
+    public void ormCount(PageDTO params) {
         System.out.println("debug count >>>>>>>>>>>>>>> ");
 
-        System.out.println(boardMapper.count());
+        System.out.println(boardMapper.count(params));
 
         System.out.println("debug >>>>>>>>>>>> count success ");
     }
@@ -92,10 +93,10 @@ public class MybatisORMTests {
     }
 
     @Test
-    public void ormFindAll() {
+    public void ormFindAll(PageDTO params) {
         System.out.println("debug findAll >>>>>>>>>>>>>>>>");
 
-        List<BoardResponse> boardResponseList = boardMapper.findAll();
+        List<BoardResponse> boardResponseList = boardMapper.findAll(params);
         for (BoardResponse response : boardResponseList) {
             System.out.println(response);
         }

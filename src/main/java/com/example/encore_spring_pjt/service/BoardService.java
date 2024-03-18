@@ -1,5 +1,6 @@
 package com.example.encore_spring_pjt.service;
 
+import com.example.encore_spring_pjt.ctrl.board.util.PageDTO;
 import com.example.encore_spring_pjt.domain.BoardRequest;
 import com.example.encore_spring_pjt.domain.BoardResponse;
 
@@ -15,9 +16,12 @@ public interface BoardService {
 
     Integer deleteBoard(BoardRequest params);
 
-    List<BoardResponse> listBoard();
+    // 페이지 처리로 매개변수타입 추가
+    // List<BoardResponse> listBoard();
+    // Integer cntBoard();
+    List<BoardResponse> listBoard(PageDTO params);
+    Integer cntBoard(PageDTO params);
 
-    Integer cntBoard();
 
     Optional<BoardResponse> findBoardNoIncrement(BoardRequest params);
 }

@@ -1,5 +1,6 @@
 package com.example.encore_spring_pjt.service;
 
+import com.example.encore_spring_pjt.ctrl.board.util.PageDTO;
 import com.example.encore_spring_pjt.domain.BoardRequest;
 import com.example.encore_spring_pjt.domain.BoardResponse;
 import com.example.encore_spring_pjt.mapper.BoardMapper;
@@ -56,18 +57,34 @@ public class BoardServiceImpl implements BoardService {
         return params.getIdx();
     }
 
+/*
     @Override
     public List<BoardResponse> listBoard() {
         System.out.println("debug >>>> BoardService listBoard ");
 
-        return boardMapper.findAll();
+        return boardMapper.findAll(params);
     }
 
     @Override
     public Integer cntBoard() {
         System.out.println("debug >>>> BoardService cntBoard ");
 
-        return boardMapper.count();
+        return boardMapper.count(params);
+    }
+ */
+
+    @Override
+    public List<BoardResponse> listBoard(PageDTO params) {
+        System.out.println("debug >>>> BoardService listBoard ");
+        System.out.println("debug >>> service params , " + params);
+        return boardMapper.findAll(params);
+    }
+
+    @Override
+    public Integer cntBoard(PageDTO params) {
+        System.out.println("debug >>>> BoardService cntBoard ");
+
+        return boardMapper.count(params);
     }
 
     @Transactional

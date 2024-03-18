@@ -1,5 +1,6 @@
 package com.example.encore_spring_pjt;
 
+import com.example.encore_spring_pjt.ctrl.board.util.PageDTO;
 import com.example.encore_spring_pjt.domain.BoardRequest;
 import com.example.encore_spring_pjt.domain.BoardResponse;
 import com.example.encore_spring_pjt.service.BoardService;
@@ -84,10 +85,10 @@ public class BoardServiceTests {
     }
 
     @Test
-    public void serviceListTest() {
+    public void serviceListTest(PageDTO params) {
         System.out.println("debug Test -> serviceListTest() ");
 
-        List<BoardResponse> responses = service.listBoard();
+        List<BoardResponse> responses = service.listBoard(params);
 
         System.out.println(">>> listBoard result <<<");
         for (BoardResponse response : responses) {
@@ -96,10 +97,10 @@ public class BoardServiceTests {
     }
 
     @Test
-    public void serviceCntTest() {
+    public void serviceCntTest(PageDTO params) {
         System.out.println("debug Test -> serviceCntTest() ");
 
-        Integer cnt = service.cntBoard();
+        Integer cnt = service.cntBoard(params);
 
         System.out.println("cntBoard result" + cnt + "건의 삭제되지 않은 레코드가 있습니다.");
     }
