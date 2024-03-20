@@ -1,6 +1,7 @@
 package com.example.encore_spring_pjt;
 
 import com.example.encore_spring_pjt.ctrl.board.util.PageDTO;
+import com.example.encore_spring_pjt.ctrl.board.util.PageResponse;
 import com.example.encore_spring_pjt.domain.BoardRequest;
 import com.example.encore_spring_pjt.domain.BoardResponse;
 import com.example.encore_spring_pjt.service.BoardService;
@@ -8,7 +9,6 @@ import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
 import java.util.Optional;
 
 // DI - Autowired, Resource
@@ -88,12 +88,8 @@ public class BoardServiceTests {
     public void serviceListTest(PageDTO params) {
         System.out.println("debug Test -> serviceListTest() ");
 
-        List<BoardResponse> responses = service.listBoard(params);
+        PageResponse<BoardResponse> responses = service.listBoard(params);
 
-        System.out.println(">>> listBoard result <<<");
-        for (BoardResponse response : responses) {
-            System.out.println(response);
-        }
     }
 
     @Test

@@ -25,9 +25,12 @@ public class PageDTO {
     // 검색유형을 의미 (제목, 작성자, 내용, ...etc.)
     private String searchType;
 
+    // offset 계산된 결과를 담기 위해서
+    private Pagination pagination;
+
     public PageDTO() {
         this.page = 1;
-        this.recordSize = 5;
+        this.recordSize = 2;
         this.pageSize = 10;
     }
 

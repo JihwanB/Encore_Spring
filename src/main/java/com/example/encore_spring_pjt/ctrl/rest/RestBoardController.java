@@ -1,6 +1,7 @@
 package com.example.encore_spring_pjt.ctrl.rest;
 
 import com.example.encore_spring_pjt.ctrl.board.util.PageDTO;
+import com.example.encore_spring_pjt.ctrl.board.util.PageResponse;
 import com.example.encore_spring_pjt.domain.BoardRequest;
 import com.example.encore_spring_pjt.domain.BoardResponse;
 import com.example.encore_spring_pjt.service.BoardService;
@@ -11,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -42,10 +42,10 @@ public class RestBoardController {
 
     // 전체조회
     @GetMapping(value = "list", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<BoardResponse>> list(@RequestBody PageDTO params) {
+    public ResponseEntity<PageResponse<BoardResponse>> list(@RequestBody PageDTO params) {
         System.out.println("debug RestBoardController client path /board_rest/list");
 
-        List<BoardResponse> list = service.listBoard(params);
+        PageResponse<BoardResponse> list = service.listBoard(params);
 
         return new ResponseEntity<>(list, HttpStatus.OK);
     }

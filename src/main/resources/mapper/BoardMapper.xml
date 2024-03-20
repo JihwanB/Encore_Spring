@@ -81,6 +81,7 @@
         SELECT COUNT(*)
         FROM ENCORE_BOARD_TBL
         WHERE DELETE_YN = 0
+            <include refid="search"/>
     </select>
     
     <update id="deleteByIdx"
@@ -93,15 +94,51 @@
             DELETE_TIME = NOW()
         WHERE IDX = #{idx}
     </update>
-    
+
+    <!-- Dynamic Query
+    <if test="condition">query</if>
+    <choose>
+        <when test=""></when>
+        <when test=""></when>
+        <otherwise></otherwise>
+    </choose>
+    -->
+    <sql id="search">
+        <!-- 검색 조건이 있을 때 -->
+        <if test="keyword != null">
+            <choose>
+                <!-- 검색 타입이 있을 때 -->
+                <when test="'title'.equals(searchType)">
+                    AND TITLE LIKE CONCAT('%',#{keyword},'%')
+                </when>
+                <when test="'writer'.equals(searchType)">
+                    AND WRITER LIKE CONCAT('%',#{keyword},'%')
+                </when>
+                <when test="'content'.equals(searchType)">
+                    AND CONTENT LIKE CONCAT('%',#{keyword},'%')
+                </when>
+                <!-- 조건이 전체일 때 -->
+                <otherwise>
+                    AND(
+                        TITLE LIKE CONCAT('%',#{keyword},'%')
+                        OR
+                        WRITER LIKE CONCAT('%',#{keyword},'%')
+                        OR
+                        CONTENT LIKE CONCAT('%',#{keyword},'%')
+                    )
+                </otherwise>
+            </choose>
+        </if>
+    </sql>
     <select id="findAll"
             parameterType="com.example.encore_spring_pjt.ctrl.board.util.PageDTO"
             resultType="com.example.encore_spring_pjt.domain.BoardResponse">
         SELECT <include refid="selectColumns"/>
         FROM ENCORE_BOARD_TBL
         WHERE DELETE_YN = 0
+            <include refid="search"/>
         ORDER BY IDX DESC
-        LIMIT #{offset}, #{recordSize}
+        LIMIT #{pagination.limitStart}, #{recordSize}
     </select>
 
     <update id="updateViewCnt"

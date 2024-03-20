@@ -1,6 +1,7 @@
 package com.example.encore_spring_pjt.ctrl.board;
 
 import com.example.encore_spring_pjt.ctrl.board.util.PageDTO;
+import com.example.encore_spring_pjt.ctrl.board.util.PageResponse;
 import com.example.encore_spring_pjt.domain.BoardRequest;
 import com.example.encore_spring_pjt.domain.BoardResponse;
 import com.example.encore_spring_pjt.service.BoardService;
@@ -11,10 +12,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -40,13 +41,18 @@ public class BoardController {
 //    }
 
     @RequestMapping("/list.hanwha") // http:// serverip : port / board / list.hanwha
-    public String list(PageDTO params, Model model) {
+    public String list(@ModelAttribute("params") PageDTO params, Model model) {
         //BoardServiceImpl listBoard() 메서드 호출하여 결과를 반환 받고
         //반환받은 결과를 Model(requestScope) 에 심고 이 데이터를
         //forward 되는 페이지에서 출력
-        List<BoardResponse> lst = service.listBoard(params);
-        model.addAttribute("lst", lst);
-        return "list";
+
+        // 반환 결과만 수정
+        PageResponse<BoardResponse> list = service.listBoard(params);
+
+        model.addAttribute("lst", list);
+        // 페이징처리를 위해서 list -> listPage
+        // return "list"
+        return "listPage";
     }
 
     // @GetMapping("/view.hanwha/{idx}")

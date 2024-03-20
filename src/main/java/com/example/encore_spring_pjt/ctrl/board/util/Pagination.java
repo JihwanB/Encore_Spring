@@ -10,10 +10,10 @@ public class Pagination {
     // 전체 데이터 수
     private int totalRecordCnt;
 
-    // 전체 페이지 수
+    // 페이지 하단에 출력할 전체 페이지 수
     private int totalPageCnt;
 
-    // 첫 페이지, 마지막 페이지 번호
+    // 첫 페이지, 마지막 페이지 번호(pagination 을 의미하는 페이지 번호)
     private int firstPage;
     private int lastPage;
 
