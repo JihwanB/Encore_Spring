@@ -46,10 +46,11 @@
 		  </div><!-- /.col -->
 		</div>
 	  </form>
+
 	  		<!-- 카카오 로그인 -->
-			<a class="p-2" href="">
-				카카오 oauth
-			</a><br/>	
+			<a class="p-2" href="https://kauth.kakao.com/oauth/authorize?client_id=d9fdb3fbfe8b2103f40a0eab933b89ed&redirect_uri=http://localhost:8888/user/kakao_login.hanwha&response_type=code">
+				<img src="//mud-kage.kakao.com/14/dn/btqbjxsO6vP/KPiGpdnsubSq3a0PHEGUK1/o.jpg" class="img-responsive" />
+			</a><br/>
 			
 	
 			<a href="#">I forgot my password</a><br>

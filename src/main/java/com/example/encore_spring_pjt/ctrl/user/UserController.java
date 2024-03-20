@@ -15,9 +15,12 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/user") // http://serverIP:port/user
@@ -32,11 +35,11 @@ public class UserController {
         System.out.println("debug UserController client path /user/login.hanwha");
         System.out.println("param value >>> id : " + params.getId() + " pwd : " + params.getPwd());
         String encodePwd = userService.getPwd(params); // 서버의 인코딩 된 암호 불러오기
-        if (passwordEncoder.matches(params.getPwd(), encodePwd)){// 입력된 값과 인코딩 되어 저장되어있던 값 비교
+        if (passwordEncoder.matches(params.getPwd(), encodePwd)) {// 입력된 값과 인코딩 되어 저장되어있던 값 비교
             params.setPwd(encodePwd); // 입력이 유효하다면 params 의 값을 갱신하고 서비스로 보냄
         }
         UserResponse response = userService.loginService(params);
-        if(response != null) {
+        if (response != null) {
             session.setAttribute("loginUser", response);
             return "redirect:/board/list.hanwha";
         } else {
@@ -54,7 +57,7 @@ public class UserController {
 //    }
 
     @GetMapping("/logout.hanwha")
-    public String logout(HttpSession session){
+    public String logout(HttpSession session) {
         System.out.println("debug UserController client path /user/logout.hanwha");
         session.invalidate();
         return "redirect:/";
@@ -63,13 +66,13 @@ public class UserController {
     @GetMapping("/join.hanwha")
     public String joinForm() {
         System.out.println("debug UserController client path /user/join.hanwha");
-        return "join" ;
+        return "join";
     }
 
     @PostMapping("/join.hanwha")
     public String join(@Valid UserRequest params,
                        BindingResult bindingResult,
-                        Model model /*,
+                       Model model /*,
                        RedirectAttributes attr*/) {
         System.out.println("debug UserController client POST path /user/join.hanwha");
         /*
@@ -80,11 +83,11 @@ public class UserController {
         step 04) 화면분기는 /
          */
 
-        if (bindingResult.hasErrors()){
+        if (bindingResult.hasErrors()) {
             //attr.addFlashAttribute("errorMsg", "유효성 체크 검증 실패");
             List<ObjectError> list = bindingResult.getAllErrors();
             // Map<String, String> map = new HashMap<>();
-            for(ObjectError ob : list){
+            for (ObjectError ob : list) {
                 FieldError field = (FieldError) ob;
                 String msg = ob.getDefaultMessage();
                 System.out.println(">>>>>>>>>>>>>");
@@ -104,4 +107,34 @@ public class UserController {
         userService.registerService(params);
         return "redirect:/";
     }
+
+    // 인증 이후 카카오 쪽에서 호출하는 메서드
+    @GetMapping("/kakao_login.hanwha")
+    public String kakaoLogin(@RequestParam(value = "code") String code, Model model, HttpSession session) {
+        System.out.println("debug >>> oauth kakao code, " + code);
+        String accessToken = userService.getAccessToken(code);
+
+        Map<String, Object> users = userService.getUserInfo(accessToken);
+        System.out.println("debug >>> ctrl result , " + users.get("name"));
+
+        UserResponse response = new UserResponse();
+        response.setName((String) (users.get("name")));
+        session.setAttribute("loginUser", response);
+        session.setAttribute("access_token", accessToken);
+        return "redirect:/board/list.hanwha";
+    }
+
+    @GetMapping("/kakao_logout.hanwha")
+    public String kakaoLogout(HttpSession session) {
+        System.out.println("debug >>> ctrl kakaoLogout");
+        // 1. session 으로부터 access token 을 얻어와서 카카오서버에 전달 삭제
+        String token = (String) session.getAttribute("access_token");
+        Map<String, String> map = new HashMap<>();
+        map.put("Authorization", "Bearer " + token);
+        String result = userService.logout(map);
+        System.out.println("debug >>> logout result , " + result);
+        session.invalidate();
+        return "redirect:/";
+    }
+
 }

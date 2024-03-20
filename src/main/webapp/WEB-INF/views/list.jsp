@@ -21,7 +21,8 @@
         </div>
         <div class="pull-right">
             <h1 class="page-title">${ loginUser.name }님이 로그인 하였습니다</h1>
-            <button class="btn btn-warning"><a href="/user/logout.hanwha">로그아웃</a></button>
+            <%-- <button class="btn btn-warning"><a href="/user/logout.hanwha">로그아웃</a></button> --%>
+            <button class="btn btn-warning btn-sm"><a href="https://kauth.kakao.com/oauth/logout?client_id=d9fdb3fbfe8b2103f40a0eab933b89ed&logout_redirect_uri=http://localhost:8888/user/kakao_logout.hanwha">로그아웃</a></button>
         </div>
     </div>
     
