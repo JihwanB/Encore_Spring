@@ -1,162 +1,185 @@
 package com.example.encore_spring_pjt.ctrl.board;
 
-import com.example.encore_spring_pjt.ctrl.board.util.PageDTO;
-import com.example.encore_spring_pjt.ctrl.board.util.PageResponse;
-import com.example.encore_spring_pjt.domain.BoardRequest;
-import com.example.encore_spring_pjt.domain.BoardResponse;
-import com.example.encore_spring_pjt.service.BoardService;
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Optional;
+import com.example.encore_spring_pjt.ctrl.board.util.PageDTO;
+import com.example.encore_spring_pjt.ctrl.board.util.PageResponse;
+import com.example.encore_spring_pjt.domain.BoardRequest;
+import com.example.encore_spring_pjt.domain.BoardResponse;
+import com.example.encore_spring_pjt.domain.CommentEntity;
+import com.example.encore_spring_pjt.service.BoardServiceImpl;
+
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 @Controller
-@RequestMapping("/board")
+@RequiredArgsConstructor
+@RequestMapping("/board") // http://serverip:port/board 하면 동작함
 public class BoardController {
 
-    //    @Autowired
-//    BoardServiceImpl boardServiceImpl;
-    @Resource(name = "board")
-    private BoardService service;
+	private final BoardServiceImpl service;
+	//UPPER: DI발생
 
-//    @RequestMapping("/list.hanwha")
-//    @ResponseBody
-//    public List<BoardResponse> list(){
-//        System.out.println("debug BoardController client path /board/list.hanwha");
-//
-//        //BoardServiceImpl listBoard() 메서드 호출하여 결과를 반환 받고
-//        //반환받은 결과를 Model(requestScope) 에 심고 이 데이터를
-//        //forward 되는 페이지에서 출력
-//        List<BoardResponse> lst = service.listBoard();
-//        System.out.println(lst);
-//        return lst;
-//    }
+	@RequestMapping("/list.hanwha")
+	public String list(@ModelAttribute("params") PageDTO params, Model model) {
 
-    @RequestMapping("/list.hanwha") // http:// serverip : port / board / list.hanwha
-    public String list(@ModelAttribute("params") PageDTO params, Model model) {
-        //BoardServiceImpl listBoard() 메서드 호출하여 결과를 반환 받고
-        //반환받은 결과를 Model(requestScope) 에 심고 이 데이터를
-        //forward 되는 페이지에서 출력
+		PageResponse<BoardResponse> list = service.listBoard(params);
+		model.addAttribute("lst", list);
+		//boardServiceImpl - listBoard() 메서드를 호출하여 결과를 반환받고 반환받은 결과를 Model(request scope)에 심어(modelandview, model~)
+		// -> 이 데이터를 forward되는 페이지에서 출력!
+		return "listPage";
+	}
 
-        // 반환 결과만 수정
-        PageResponse<BoardResponse> list = service.listBoard(params);
+	//주석처리 = pathvariable 방식, 주석처리 x = legacy 방식
+	//@GetMapping("/view.hanwha/{idx}")
 
-        model.addAttribute("lst", list);
-        // 페이징처리를 위해서 list -> listPage
-        // return "list"
-        return "listPage";
-    }
+	// @GetMapping("/view.hanwha")
+	// public String view(BoardRequest params, Model model){
+	// //public String view(@PathVariable("idx") Integer idx){
+	//     System.out.println("debug >>> boardcontroller client path/board/view.hanwha");
+	//     System.out.println("param value : "+params.getIdx());
 
-    // @GetMapping("/view.hanwha/{idx}")
-    // public void view(@PathVariable("idx") Integer idx){
-    // 조회수 중복방지 구현으로 커스터마이징
-    // 쿠키를 이용한 WEB : request.getSession(), request.getCookie()
-    // setMaxAge(60 * 60 * 24 * 30) 초단위. 60초 * 60분 * 24시간 * 30일 = 1달
-    @GetMapping("/view.hanwha")
-    public String view(BoardRequest params,
-                       Model model,
-                       HttpServletRequest request,
-                       HttpServletResponse response) {
-        //public void view(BoardRequest params){
-        System.out.println("debug BoardController client path /board/view.hanwha");
-        System.out.println("params value , " + params.getIdx());
-        /*
-        view로부터 키(idx) 값을 전달받고 객체로 바인딩되서 service 에 전달
-        response 객체를 반환받고
-        해당 response 객체 Model에 심어서 viewPage로 전달 과정
-         */
+	//System.out.println("path value : "+idx);
+	//Q2.
+	//view로부터 키(idx)값을 전달받고 객체로 바인딩되서 service에 전달
+	//response객체를 반환받고 해당 response 객체를 model에 심어서 view페이지로 전달하는 과정
+	// Optional<BoardResponse> response = service.findBoard(params);
+	// model.addAttribute("response",response.get());
+	// return "view";
 
-        // 쿠키가 있는지 판단하는 코드
-        Cookie[] cookies = request.getCookies();
-        System.out.println("debug >>> cookies length : " + cookies.length);
-        int visited = 0;
+	//중복 방지 구현으로 커스터마이징..
+	//쿠키를 이용한 web : request.getSession(), request.getcookies();
+	//client에 저장되어야 하는 이유 : 자동 로그인기능이니까, 매번 로긴 되어야 해서 client pc 에 저장한 것임
+	//setMaxAge(60*60*24*30)
+	@GetMapping("/view.hanwha")
+	public String view(BoardRequest params, Model model, HttpServletRequest request, HttpServletResponse response) {
+		//public String view(@PathVariable("idx") Integer idx){
+		System.out.println("debug >>> boardController client path/board/view.hanwha");
+		System.out.println("param value : " + params.getIdx());
+		//Optional<BoardResponse> responseEntity = service.findBoard(params);
+		//model.addAttribute("response",responseEntity.get());
 
-        for (Cookie cookie : cookies) {
-            System.out.println("debug >>> cookie name . " + cookie.getName());
-            if (cookie.getName().equals("visit")) {
-                visited = 1;
-                System.out.println("debug >>> cookie exists visited");
-                if (cookie.getValue().contains(params.getIdx().toString())) {
-                    System.out.println("debug >>>> cookie value idx , " + params.getIdx());
-                    Optional<BoardResponse> result = service.findBoardNoIncrement(params);
-                    model.addAttribute("response", result.get());
-                } else {
-                    System.out.println("debug >>> visit cookie exits but params idx not exits");
-                    cookie.setValue(params.getIdx().toString());
-                    response.addCookie(cookie);
-                    Optional<BoardResponse> result = service.findBoard(params);
-                    model.addAttribute("response", result.get());
-                }
-            }
-        }
-        System.out.println("debug >>> after loop visited , " + visited);
-        if (visited == 0) {
-            Cookie c = new Cookie("visit", params.getIdx().toString());
-            response.addCookie(c);
-            Optional<BoardResponse> result = service.findBoard(params);
-            model.addAttribute("response", result.get());
-        }
+		//수정사항 발생 부분( after 자동로긴 기능 )
 
-        /*
-        if (cookies != null) {
-            // 쿠키정보가 있을 때
-            service.findBoardNotCnt(params);
-        } else {
-            // 쿠키정보가 없을 때
-            System.out.println("debug >>> cookie is not present");
-            Cookie cookie = new Cookie("view_upcnt", params.getIdx().toString());
-            cookie.setMaxAge(60 * 60 * 24);
-            response.addCookie(cookie);
-            Optional<BoardResponse> responseEntity = service.findBoard(params);
-            model.addAttribute("response", responseEntity.get());
-        }
-         */
+		Cookie[] cookies = request.getCookies();
+		System.out.println("debug cookies length " + cookies.length);
+		int visited = 0;
 
-        return "view";
-    }
+		for (Cookie cookie : cookies) {
+			System.out.println("debug >>> cookie name , " + cookie.getName());
 
-    @GetMapping("/write.hanwha")
-    public String writeForm() {
-        System.out.println("debug BoardController client path /board/write.hanwha");
-        return "write";
-    }
+			if (cookie.getName().equals("visit")) {
+				visited = 1;
+				System.out.println("debug >>>> cookie exits visited");
+				if (cookie.getValue().contains(params.getIdx() + "")) {
+					System.out.println("debug >>> cookie value idx , " + params.getIdx());
+					Optional<BoardResponse> result = service.findBoardNotView(params);
+					///////////////////////////
+					List<CommentEntity> lst = service.findBoardComment(params);
+					System.out.println("debug >>>>>>>> comment size , " + lst.size());
+					////////////////////////////////
+					model.addAttribute("commentlist", lst);
+					model.addAttribute("response", result.get());
+				} else {
+					//visit라는 이름으로 게시글에 들어있는 모든 값을 cookie값을 다루는 정책
+					System.out.println("visit cookie exits but params idx not exits");
+					cookie.setValue(params.getIdx() + "");
+					response.addCookie(cookie);
+					Optional<BoardResponse> result = service.findBoard(params);
 
-    @PostMapping("/write.hanwha")
-    public String writeForm(BoardRequest params) {
-        System.out.println(params);
-        Integer idx = service.saveBoard(params);
-        System.out.println("debug >>>>>>>>>>>> " + idx + " 번 글이 삭제되었습니다.");
-        return "redirect:/board/list.hanwha";
-    }
+					//////////////// comment add
+					List<CommentEntity> lst = service.findBoardComment(params);
+					System.out.println("debug >>> comment size , " + lst.size());
+					////////////////
+					model.addAttribute("commentlist", lst);
+					model.addAttribute("response", result.get());
+				}
+			}
+		}
+		System.out.println("debug >>> after loop visited , " + visited);
+		if (visited == 0) {
+			Cookie c = new Cookie("visit", params.getIdx() + "");
+			response.addCookie(c);
+			Optional<BoardResponse> result = service.findBoard(params);
+			///////////////////////////
+			List<CommentEntity> lst = service.findBoardComment(params);
+			System.out.println("debug >>>>>>>> comment size , " + lst.size());
+			////////////////////////////////
+			model.addAttribute("commentlist", lst);
+			model.addAttribute("response", result.get());
 
-    @GetMapping("/delete.hanwha")
-    public String deleteForm(BoardRequest params) {
-        service.deleteBoard(params);
-        return "redirect:/board/list.hanwha";
-    }
+		}
+		return "view";
+	}
 
-    @GetMapping("/update.hanwha")
-    public String editForm(BoardRequest params, Model model) {
-        if (params.getIdx() != null) {
-            Optional<BoardResponse> editParams = service.findBoard(params);
-            model.addAttribute("response", editParams.get());
-            System.out.println(editParams);
-        }
-        return "write";
-    }
+	@GetMapping("/write.hanwha")
+	public String writeForm() {
+		System.out.println("debug boardController client path GET! /board/write.hanwha");
+		return "write";
+	}
 
-    @PostMapping("/update.hanwha")
-    public String updateForm(BoardRequest params) {
-        service.updateBoard(params);
-        return "redirect:/board/view.hanwha?idx=" + params.getIdx();
-    }
+	@PostMapping("/write.hanwha")
+	public String write(BoardRequest params) {
+		System.out.println("debug boardController client path POST! /board/write.hanwha");
+		System.out.println("debug params : " + params);
+		/*
+		 * params로 넘겨받은 데이터를 service에게 전달하여 DB(Save)
+		 * 입력된데이터의 기본키값을 반환받고 출력
+		 * 화면이동 : list
+		 */
+		Integer idx = service.saveBoard(params);
+		System.out.println("debug result : " + idx + "번 게시글 입력");
+		return "redirect:/board/list.hanwha";
+	}
+
+	@GetMapping("/delete.hanwha")
+	public String delete(BoardRequest params) {
+		System.out.println("debug boardController client path GET! /board/delete.hanwha");
+		System.out.println("debug params : " + params);
+		Integer idx = service.deleteBoard(params);
+		System.out.println("debug result : " + idx + "번 게시글 삭제하겠습니까?");
+		return "redirect:/board/list.hanwha";
+	}
+
+	@PostMapping("/update.hanwha")
+	public String update(BoardRequest params) {
+		System.out.println("debug BoardController client path POST /board/update.hanwha");
+		System.out.println("debug >>> params value " + params);
+		Integer idx = service.updateBoard(params);
+		System.out.println("debug result => " + idx + "번 게시글 수정");
+		return "redirect:/list.hanwha";
+	}
+
+	//COMMENT save
+	@GetMapping("/commentSave.hanwha")
+	@ResponseBody
+	public List<CommentEntity> commentSave(CommentEntity entity) {
+		System.out.println("debug boardController client path GET /board/commentSave.hanwha");
+		System.out.println("debug params , " + entity);
+		List<CommentEntity> list = service.commentSave(entity);
+
+		return list;
+	}
+
+	@PostMapping("/commentDel.hanwha")
+	@ResponseBody
+	public List<CommentEntity> commentDel(CommentEntity entity) {
+		System.out.println("debug boardController client path GET /board/commentDel.hanwha");
+		System.out.println("debug params , " + entity);
+		List<CommentEntity> list = service.commentDel(entity);
+
+		return list;
+	}
 
 }

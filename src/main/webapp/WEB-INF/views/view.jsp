@@ -2,6 +2,7 @@
          pageEncoding="UTF-8" %>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,11 +12,17 @@
     <link rel="stylesheet" href="../plugin/mCustomScrollbar/jquery.mCustomScrollbar.min.css"/>
 
 </head>
+
 <body>
 
 <div class="fixed-navbar">
     <div class="pull-left">
         <h1 class="page-title">Hanwha SW Camp 5th</h1>
+    </div>
+    <div class="pull-right">
+        <h1 class="page-title">${ loginUser.name }님 로그인</h1>
+        <button class="btn btn-warning"><a href="/user/logout.hanwha">로그아웃</a></button>
+
     </div>
 </div>
 
@@ -26,6 +33,7 @@
                 <div class="box-content">
 
                     <input type="hidden" id="idx" value="${response.idx}"/>
+                    <input type="hidden" id="writer" value="${loginUser.id}"/>
 
 
                     <div class="card-content">
@@ -68,12 +76,18 @@
                             <a href="javascript:listPage()"
                                class="btn btn-default waves-effect waves-light"
                                onclick="listPage();">뒤로가기</a>
-                            <c:if test="${loginUser.name==response.writer}">
-                                <a href="/board/update.hanwha?idx=${response.idx}"
+
+                            <c:if test="${ loginUser.id == response.writer }">
+                                <a href="javascript:void(0)"
                                    class="btn btn-primary waves-effect waves-light"
                                    onclick="writePage();">수정하기</a>
-                                <%--<a  href="/board/delete.hanwha?idx=${response.idx}"
-                                    class="btn btn-danger waves-effect waves-light">삭제하기</a>--%>
+
+                                <%--
+                                <a  href="/board/delete.hanwha?idx=${response.idx}"
+                                    class="btn btn-danger waves-effect waves-light"
+                                                        >삭제하기</a>
+                                --%>
+
                                 <button type="button"
                                         class="btn btn-danger waves-effect waves-light"
                                         id="delBtn">삭제하기
@@ -90,35 +104,30 @@
 
                             <form class="form-horizontal form-view">
                                 <div class="input-group margin-bottom-20">
-                                    <input type="email" class="form-control" placeholder="">
+                                    <input id="commentContent" type="text" class="form-control" placeholder="">
                                     <div class="input-group-btn">
-                                        <button type="button" class="btn waves-effect waves-light"><i
-                                                class="fa fa-commenting" aria-hidden="true"></i></button>
+                                        <button id="commentSaveBtn" type="button" class="btn waves-effect waves-light">
+                                            <i class="fa fa-commenting" aria-hidden="true"></i>
+                                        </button>
                                     </div>
                                 </div>
-                                <ul class="notice-list">
-                                    <li>
-                                        <span class="name">Betty Simmons</span>
-                                        <span class="desc">There are new settings available</span>
-                                        <span class="time">2019.03.26</span>
-                                        <button type="button" class="btn btn-xs btn-circle"><i class="fa fa-close"
-                                                                                               aria-hidden="true"></i>
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <span class="name">Betty Kim</span>
-                                        <span class="desc">There are new settings available</span>
-                                        <span class="time">2019.03.15</span>
-                                        <button type="button" class="btn btn-xs btn-circle"><i class="fa fa-close"
-                                                                                               aria-hidden="true"></i>
-                                        </button>
-                                    </li>
+
+                                <ul class="notice-list" id="comment-list">
+                                    <c:forEach items="${commentlist}" var="comment">
+                                        <li>
+                                            <span class="name">${comment.writer}</span>
+                                            <span class="desc">${comment.content}</span>
+                                            <span class="time">${comment.regdate}</span>
+                                            <button onclick="commentDel(${comment.id}, ${response.idx})" type="button"
+                                                    class="btn btn-xs btn-circle">
+                                                <i class="fa fa-close" aria-hidden="true"></i>
+                                            </button>
+                                        </li>
+                                    </c:forEach>
                                 </ul>
                             </form>
                         </div>
                     </div>
-
-
                 </div>
             </div>
 
@@ -127,8 +136,6 @@
                     <li>2024 ⓒ Encore</li>
                 </ul>
             </footer>
-
-
         </div>
     </div>
 </div>
@@ -143,24 +150,105 @@
     /*<![CDATA[*/
     $(document).ready(function () {
         $("#delBtn").click(function () {
-            //window.alert("버튼을 클릭하셨습니다.");
-            //console.log(">>>>>>>>>>>>>>>>>>>>>> ");
-            //console.log($("#idx").val());
-            console.log(location.search);
-            //console.log(">>>>>>>>>>>>>>>>>>>>>> ");
-            //const idx = $("#idx").val() ;
-            if (!confirm("게시글 삭제할까요?")) {
+            //window.alert("버튼을 클릭하였습니다.....");
+            //console.log(>>>>>>>>>>); //sout과 유사한 개념 in front!
+            //console.log($("idx").val() );
+            //console.log(>>>>>>>>>>);
+            const idx = $("#idx").val()
+            if (!confirm(idx + "번 게시글을 삭제하시겠습니까? ")) {
                 return false;
             } else {
-                location.href = "/board/delete.hanwha" + location.search;
+                location.href = "/board/delete.hanwha?idx=" + idx;
             }
-        })
-    });
+        });
+        $("#commentSaveBtn").click(function () {
+            //window.alert("comment save click");
+            //게시글 idx, writer, comment msg
+            //json{} -> server
+            let idx = $("#idx").val();
+            let writer = $("#writer").val();
+            let commentContent = $("#commentContent").val();
+            let jsonData = {
+                idx: idx,
+                writer: writer,
+                content: commentContent
+            };
+            //window.alert(jsonData);
+            var html = "";
+            $.ajax({
+                url: "../board/commentSave.hanwha",
+                type: "get",
+                data: jsonData,
+                dataType: "json",
+                success: function (lst) {
+                    $("#comment-list").empty();
+                    $.each(lst, function (index, comment) {
+                        html += '<li>';
+                        html += '<span class="name">' + comment.writer + '</span>';
+                        html += '<span class="desc">' + comment.content + '</span>';
+                        html += '<span class="time">' + comment.regdate + '</span>';
+                        html += '<button onclick="commentDel(' + comment.id + ' , ' + $("#idx").val() + ')" type="button" class="btn btn-xs btn-circle"><i class="fa fa-close" aria-hidden="true"></i></button>';
+                        html += '</li>';
+                    });
+                    window.alert(html);
+                    $("#comment-list").append(html);
+
+                }
+            });
+            $("#commentContent").val("");
+
+        });
+
+    }); // jQuery document.ready end
+
+    function commentDel(id, idx) {
+        window.alert("comment id = " + id + " , " + idx);
+        var html = "";
+        $.ajax({
+            url: "../board/commentDel.hanwha",
+            type: "post",
+            data: {id: id, idx: idx},
+            dataType: "json",
+            success: function (lst) {
+                $("#comment-list").empty();
+                $.each(lst, function (index, comment) {
+                    html += '<li>';
+                    html += '<span class="name">' + comment.writer + '</span>';
+                    html += '<span class="desc">' + comment.content + '</span>';
+                    html += '<span class="time">' + comment.regdate + '</span>';
+                    html += '<button onclick="commentDel(' + comment.id + ')" type="button" class="btn btn-xs btn-circle"><i class="fa fa-close" aria-hidden="true"></i></button>';
+                    html += '</li>';
+                });
+                window.alert(html);
+                $("#comment-list").append(html);
+
+            }
+        });
+
+    }
+
+    function displayComment(lst) {
+        $("#comment-list").empty();
+        let html = "";
+        window.alert(lst);
+
+        $.each(lst, function (index, comment) {
+            html += `<li>`;
+            html += `<span class="name">${comment.writer}</span>`;
+            html += `<span class="desc">${comment.content}</span>`;
+            html += `<span class="time">${comment.regdate}</span>`;
+            html += `<button type="button" class="btn btn-xs btn-circle"><i class="fa fa-close" aria-hidden="true"></i></button>`;
+            html += `</li>`;
+        });
+        window.alert(html);
+        $("#comment-list").append(html);
+    }
 
     function listPage() {
-        console.log("debug >>> listPage() call ");
+        console.log("debug >>> listPage() call");
         const queryString = new URLSearchParams(location.search);
-        location.href = "/board/list.hanwha?" + queryString.toString();
+        console.log("debug >>> listPage() : " + queryString);
+        location.href = "/board/list.hanwha?";
     }
 
     /*]]>*/

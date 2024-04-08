@@ -1,29 +1,42 @@
 package com.example.encore_spring_pjt.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.example.encore_spring_pjt.ctrl.board.util.PageDTO;
 import com.example.encore_spring_pjt.ctrl.board.util.PageResponse;
 import com.example.encore_spring_pjt.domain.BoardRequest;
 import com.example.encore_spring_pjt.domain.BoardResponse;
-
-import java.util.Optional;
+import com.example.encore_spring_pjt.domain.CommentEntity;
 
 public interface BoardService {
-    Integer saveBoard(BoardRequest params);
+	public Integer saveBoard(BoardRequest params); //사용자 키인한 값 서비스로 넘김- 서비스는 dao로 넘김
 
-    Optional<BoardResponse> findBoard(BoardRequest params);
+	//public BoardResponse findBoard(BoardRequest params);
+	public Optional<BoardResponse> findBoard(BoardRequest params);
 
-    Integer updateBoard(BoardRequest params);
+	// 조회수 중복방지 메서드 추가
+	public Optional<BoardResponse> findBoardNotView(BoardRequest params);
 
-    Integer deleteBoard(BoardRequest params);
+	public void findBoardUpCnt(BoardRequest params);
 
-    // 페이지 처리로 매개변수타입 추가
-    // List<BoardResponse> listBoard();
-    // Integer cntBoard();
+	public Integer updateBoard(BoardRequest params);
 
-    // List<BoardResponse> listBoard(PageDTO params);
-    PageResponse<BoardResponse> listBoard(PageDTO params);
-    Integer cntBoard(PageDTO params);
+	public Integer deleteBoard(BoardRequest params);
 
+	//페이지 처리로  인자가 변경
+	//public List<BoardResponse> listBoard();
+	//public Integer cntBoard();
 
-    Optional<BoardResponse> findBoardNoIncrement(BoardRequest params);
+	public PageResponse<BoardResponse> listBoard(PageDTO params);
+
+	public Integer cntBoard(PageDTO params);
+
+	// comment
+	List<CommentEntity> findBoardComment(BoardRequest params);
+
+	List<CommentEntity> commentSave(CommentEntity params);
+
+	List<CommentEntity> commentDel(CommentEntity params);
+
 }
