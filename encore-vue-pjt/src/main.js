@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import router from './router/index.js'
 
 // 서버기동 : npm run serve
 
@@ -11,5 +12,5 @@ import { createApp } from 'vue'
 // import App from './AppHome.vue'
 // createApp(App).mount('#app')
 
-import App from './AppIntro.vue'
-createApp(App).mount('#app')
+import App from './AppRead.vue'
+createApp(App).use(router).mount('#app')

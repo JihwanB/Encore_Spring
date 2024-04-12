@@ -64,7 +64,7 @@ export default {
     setup() {
         const work = ref('');
         const works = ref([]);
-        let cnt = 0;
+        // let cnt = 0;
         const toggle = ref(false);
         const hasError = ref(false);
 
@@ -75,7 +75,7 @@ export default {
                 return;
             }
             works.value.push({
-                idx: cnt++,
+                idx: Date.now(),
                 subject: work.value,
                 completed: false
             });
@@ -96,7 +96,7 @@ export default {
             onSubmit,
             work,
             works,
-            cnt,
+            // cnt,
             toggle,
             // onToggle,
             hasError,
