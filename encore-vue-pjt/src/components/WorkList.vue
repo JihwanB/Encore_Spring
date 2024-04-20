@@ -11,12 +11,19 @@
                 </label>
             </div>
             <!-- 삭제를 위한 버튼 추가 -->
-            <div>
+            <!-- <div>
                 <button class="btn btn-danger btn-sm" @click.stop="deleteWork(index)">Delete</button>
+            </div> -->
+            <div>
+                <button class="btn btn-danger btn-sm" @click.stop="openModal(work.id)">Delete</button>
             </div>
         </div>
 
     </div>
+
+    <!-- Modal Component 추가 -->
+    <Modal v-if="showModal" @modal-close="closeModal" @modal-delete="deleteWork" />
+
 </template>
 
 <script>
@@ -26,9 +33,15 @@ props 사용시 주의점
 - 그래서 checkbox에서 completed를 자식에서 변경해서는 안됨
 - 코드 수정이 필요한데, 데이터를 수정하려면 다시 부모에게 데이터를 전달해야 함
 */
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router';
+import Modal from '@/components/ModalComponent.vue';
+import { ref } from 'vue';
 
 export default {
+    components: {
+        Modal
+    },
+
     props: {
         works: {
             type: Array,
@@ -42,6 +55,21 @@ export default {
     ],
 
     setup(props, { emit }) {
+
+        // 모달 처리를 위한 변수 선언. 삭제 카드목록 객체의 id
+        const showModal = ref(false);
+        const workDeleteId = ref(null);
+
+        const openModal = (id) => {
+            console.log(">>> debug openModal id , ", id);
+            showModal.value = true;
+            workDeleteId.value = id;
+        }
+
+        const closeModal = () => {
+            showModal.value = false;
+        }
+
         const toggleWork = (index, event) => {
             console.log("toggleWork target , ", event.target);
             console.log(`toggleWork target , ${event.target.checked}`);
@@ -50,9 +78,11 @@ export default {
             emit('toggle-work', index, event.target.checked);
         }
 
-        const deleteWork = (index) => {
-            console.log(`deleteWork index , ${index}`);
-            emit('delete-work', index);
+        // 모달 구현으로 인해서, 삭제 이벤트를 처리하는 함수 수정이 필요
+        const deleteWork = () => {
+            emit('delete-work', workDeleteId.value);
+            showModal.value = false;
+            workDeleteId.value = null;
         }
 
         const router = useRouter();
@@ -72,7 +102,10 @@ export default {
         return {
             toggleWork,
             deleteWork,
-            readWork
+            readWork,
+            showModal,
+            openModal,
+            closeModal,
         }
     }
 }

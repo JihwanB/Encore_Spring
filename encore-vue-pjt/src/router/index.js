@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../pages/WorkIndexPage.vue';
 import Works from '../pages/works/WorkIndex.vue';
 import Work from '../pages/works/WorkView.vue';
+import WorkCreate from '../pages/works/create/WorkCreate.vue';
 
 const router = createRouter({
     history: createWebHistory(),
@@ -26,6 +27,12 @@ const router = createRouter({
             name: 'Work',
             component: Work
         },
+        // localhost:8080/works/create -> WorkCreate.vue
+        {
+            path: '/works/create',
+            name: 'WorkCreate',
+            component: WorkCreate
+        }
     ]
 
 });

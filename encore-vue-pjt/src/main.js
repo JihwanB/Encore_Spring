@@ -12,5 +12,7 @@ import router from './router/index.js'
 // import App from './AppHome.vue'
 // createApp(App).mount('#app')
 
-import App from './AppRead.vue'
+// import App from './AppRead.vue'
+
+import App from './AppToast.vue'
 createApp(App).use(router).mount('#app')
