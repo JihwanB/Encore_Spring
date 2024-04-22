@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import {createApp} from 'vue'
 import router from './router/index.js'
 
 // 서버기동 : npm run serve
@@ -14,5 +14,12 @@ import router from './router/index.js'
 
 // import App from './AppRead.vue'
 
-import App from './AppToast.vue'
-createApp(App).use(router).mount('#app')
+// import App from './AppToast.vue'
+// createApp(App).use(router).mount('#app')
+
+// vuex
+//
+import App from './AppVuex.vue'
+import store from './store'
+
+createApp(App).use(store).use(router).mount('#app')
